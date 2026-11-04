@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:madl_project/services/history_service.dart';
-import 'package:madl_project/screens/result_screen.dart';
+import 'package:qrguard/services/history_service.dart';
+import 'package:qrguard/screens/result_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
