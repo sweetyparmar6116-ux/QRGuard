@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:madl_project/models/qr_content.dart';
-import 'package:madl_project/services/qr_content_parser.dart';
+import 'package:qrguard/models/qr_content.dart';
+import 'package:qrguard/services/qr_content_parser.dart';
 
 void main() {
   group('parseQrContent', () {
@@ -50,4 +50,26 @@ void main() {
       expect(parseQrContent('BEGIN:VCARD\nFN:Jane Doe').type, QrContentType.unsupported);
     });
   });
+
+    test('recognises UPI payment QR and extracts payment details', () {
+      final content = parseQrContent(
+        'upi://pay?pa=shop%40okaxis&pn=Corner%20Store&am=125.50&cu=INR',
+      );
+      expect(content.type, QrContentType.payment);
+      expect(content.upiId, 'shop@okaxis');
+      expect(content.payeeName, 'Corner Store');
+      expect(content.amount, '125.50');
+      expect(content.currency, 'INR');
+    });
+
+    test('recognises UPI payment QR without a fixed amount', () {
+      final content = parseQrContent('upi://pay?pa=person%40ybl&pn=Person');
+      expect(content.type, QrContentType.payment);
+      expect(content.upiId, 'person@ybl');
+      expect(content.amount, isNull);
+    });
+
+    test('does not classify malformed UPI payload as a payment', () {
+      expect(parseQrContent('upi://pay?pn=NoAccount').type, QrContentType.unsupported);
+    });
 }

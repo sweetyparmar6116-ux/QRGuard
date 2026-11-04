@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.qrguard"
+    namespace = "com.qrguard.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.qrguard"
+        applicationId = "com.qrguard.app"
 
         // mobile_scanner requires minSdk 21. Declared explicitly so the
         // requirement is visible here rather than relying on Flutter's default.

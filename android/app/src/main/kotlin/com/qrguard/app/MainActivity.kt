@@ -1,4 +1,4 @@
-package com.example.qrguard
+package com.qrguard.app
 
 import io.flutter.embedding.android.FlutterActivity
 

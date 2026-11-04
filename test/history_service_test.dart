@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:madl_project/models/analysis_result.dart';
-import 'package:madl_project/models/scan_record.dart';
-import 'package:madl_project/services/history_service.dart';
+import 'package:qrguard/models/analysis_result.dart';
+import 'package:qrguard/models/scan_record.dart';
+import 'package:qrguard/services/history_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

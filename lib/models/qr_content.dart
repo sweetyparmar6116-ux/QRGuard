@@ -1,5 +1,6 @@
 enum QrContentType {
   url,
+  payment,
   text,
   phone,
   email,
@@ -21,6 +22,10 @@ class QrContent {
     this.ssid,
     this.password,
     this.contactName,
+    this.payeeName,
+    this.upiId,
+    this.amount,
+    this.currency,
   });
 
   final QrContentType type;
@@ -33,4 +38,8 @@ class QrContent {
   final String? ssid;
   final String? password;
   final String? contactName;
+  final String? payeeName;
+  final String? upiId;
+  final String? amount;
+  final String? currency;
 }

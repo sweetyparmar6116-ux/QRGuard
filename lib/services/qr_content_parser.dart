@@ -11,12 +11,34 @@ QrContent parseQrContent(String input) {
   }
 
   final uri = Uri.tryParse(value);
+
+  // UPI payment payloads must be identified before generic URI handling.
+  if (uri != null && uri.scheme.toLowerCase() == 'upi' &&
+      uri.host.toLowerCase() == 'pay') {
+    final upiId = uri.queryParameters['pa']?.trim();
+    final payee = uri.queryParameters['pn']?.trim();
+    final amount = uri.queryParameters['am']?.trim();
+    final currency = uri.queryParameters['cu']?.trim();
+    if (upiId != null && upiId.isNotEmpty && upiId.contains('@')) {
+      return QrContent(
+        type: QrContentType.payment,
+        displayLabel: 'Payment QR',
+        decodedContent: value,
+        uri: uri,
+        payeeName: (payee?.isNotEmpty ?? false) ? payee : null,
+        upiId: upiId,
+        amount: (amount?.isNotEmpty ?? false) ? amount : null,
+        currency: (currency?.isNotEmpty ?? false) ? currency : 'INR',
+      );
+    }
+  }
+
   if (uri != null &&
       (uri.scheme.toLowerCase() == 'http' || uri.scheme.toLowerCase() == 'https') &&
       uri.host.isNotEmpty) {
     return QrContent(
       type: QrContentType.url,
-      displayLabel: 'Website URL',
+      displayLabel: 'Website link',
       decodedContent: value,
       uri: uri,
     );
@@ -116,10 +138,8 @@ QrContent parseQrContent(String input) {
   );
 }
 
-bool _isEmail(String value) {
-  final trimmed = value.trim();
-  return RegExp(r"^[^\s@]+@[^\s@]+\.[^\s@]+$").hasMatch(trimmed);
-}
+bool _isEmail(String value) =>
+    RegExp(r"^[^\s@]+@[^\s@]+\.[^\s@]+$").hasMatch(value.trim());
 
 bool _isPhone(String value) {
   final trimmed = value.trim();
@@ -129,8 +149,8 @@ bool _isPhone(String value) {
 }
 
 bool _looksLikeUri(String value, Uri? uri) {
-  final scheme = uri?.scheme.trim() ?? '';
-  return scheme.isNotEmpty && scheme != 'mailto' && scheme != 'tel' && scheme != 'smsto';
+  final scheme = uri?.scheme.trim().toLowerCase() ?? '';
+  return scheme.isNotEmpty && !{'mailto', 'tel', 'smsto'}.contains(scheme);
 }
 
 Map<String, String> _parseWifi(String input) {
@@ -139,8 +159,7 @@ Map<String, String> _parseWifi(String input) {
   final pattern = RegExp(r'(S|P|T|H):((?:\\.|[^;])*)');
   for (final match in pattern.allMatches(body)) {
     final key = match.group(1)!;
-    final escaped = match.group(2)!;
-    result[key] = escaped
+    result[key] = match.group(2)!
         .replaceAll(r'\;', ';')
         .replaceAll(r'\:', ':')
         .replaceAll(r'\,', ',');
@@ -149,10 +168,6 @@ Map<String, String> _parseWifi(String input) {
 }
 
 String? _vCardField(String input, String key) {
-  final pattern = RegExp(
-    '^$key(?:;[^:]+)?:(.*)\$',
-    caseSensitive: false,
-    multiLine: true,
-  );
+  final pattern = RegExp('^$key(?:;[^:]+)?:(.*)\$', caseSensitive: false, multiLine: true);
   return pattern.firstMatch(input)?.group(1)?.trim();
 }

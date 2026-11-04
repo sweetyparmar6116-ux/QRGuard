@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:madl_project/models/analysis_result.dart';
-import 'package:madl_project/services/safety_simulator.dart';
+import 'package:qrguard/models/analysis_result.dart';
+import 'package:qrguard/services/safety_simulator.dart';
 
 Finding warning(String title, String description) => Finding(title: title, description: description);
 AnalysisResult result(List<Finding> findings) => AnalysisResult(

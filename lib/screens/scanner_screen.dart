@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../app.dart';
 import 'result_screen.dart';
@@ -15,6 +16,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
   late final MobileScannerController _controller;
   bool _isNavigating = false;
   bool _torchEnabled = false;
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -71,6 +73,40 @@ class _ScannerScreenState extends State<ScannerScreen> {
     return value.codeUnits.any((unit) => unit < 0x20 && unit != 0x09);
   }
 
+  Future<void> _scanFromGallery() async {
+    if (_isNavigating) return;
+    try {
+      final image = await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (image == null || !mounted) return;
+      final capture = await _controller.analyzeImage(image.path);
+      if (!mounted) return;
+      String? content;
+      for (final barcode in capture?.barcodes ?? const <Barcode>[]) {
+        final value = barcode.rawValue?.trim();
+        if (value != null && value.isNotEmpty && !_hasControlCharacters(value)) {
+          content = value;
+          break;
+        }
+      }
+      if (content == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No readable QR code found in this image. Try a clearer image.')),
+        );
+        return;
+      }
+      _isNavigating = true;
+      await Navigator.of(context).push<void>(
+        MaterialPageRoute(builder: (_) => ResultScreen(decodedContent: content!)),
+      );
+      if (mounted) _isNavigating = false;
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not scan this image. Please try another image.')),
+      );
+    }
+  }
+
   Future<void> _toggleTorch() async {
     try {
       await _controller.toggleTorch();
@@ -104,6 +140,11 @@ class _ScannerScreenState extends State<ScannerScreen> {
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         actions: [
+          IconButton(
+            tooltip: 'Scan QR from gallery',
+            icon: const Icon(Icons.photo_library_outlined),
+            onPressed: _scanFromGallery,
+          ),
           IconButton(
             tooltip: _torchEnabled ? 'Turn flashlight off' : 'Turn flashlight on',
             icon: Icon(
