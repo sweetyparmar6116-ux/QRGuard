@@ -1,0 +1,38 @@
+name: madl_project
+description: "QRGuard — Scan smart. Check first. Open safely."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # QR/barcode scanning via device camera.
+  # Requires minSdk 21 (set explicitly in build.gradle.kts).
+  # Camera permission is declared in AndroidManifest.xml.
+  mobile_scanner: ^6.0.0
+
+  # On-device key-value storage for scan history.
+  # No backend or cloud sync — all data stays local.
+  shared_preferences: ^2.3.0
+
+  # Opens validated HTTP/HTTPS URLs after explicit user confirmation only.
+  # Never called automatically from a scan result.
+  url_launcher: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
