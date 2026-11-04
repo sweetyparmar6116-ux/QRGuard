@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:madl_project/models/qr_content.dart';
-import 'package:madl_project/services/qr_content_parser.dart';
+import 'package:qrguard/models/qr_content.dart';
+import 'package:qrguard/services/qr_content_parser.dart';
 
 void main() {
   group('parseQrContent', () {
