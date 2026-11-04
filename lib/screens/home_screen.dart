@@ -162,10 +162,19 @@ class _AppHeader extends StatelessWidget {
               width: 1.5,
             ),
           ),
-          child: const Icon(
-            Icons.security_rounded,
-            size: 44,
-            color: QRGuardTheme.teal,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              const Icon(Icons.security_rounded, size: 54, color: QRGuardTheme.teal),
+              Positioned(
+                bottom: 18,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(color: QRGuardTheme.navyLight, borderRadius: BorderRadius.circular(4)),
+                  child: const Icon(Icons.qr_code_2_rounded, size: 22, color: QRGuardTheme.textPrimary),
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 20),
