@@ -150,7 +150,7 @@ bool _isPhone(String value) {
 
 bool _looksLikeUri(String value, Uri? uri) {
   final scheme = uri?.scheme.trim().toLowerCase() ?? '';
-  return scheme.isNotEmpty && !{'mailto', 'tel', 'smsto', 'upi'}.contains(scheme);
+  return scheme.isNotEmpty && !{'mailto', 'tel', 'smsto'}.contains(scheme);
 }
 
 Map<String, String> _parseWifi(String input) {
