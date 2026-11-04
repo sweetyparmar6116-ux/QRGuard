@@ -43,7 +43,9 @@
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 					<key>UISceneStoryboardFile</key>
 					<string>Main</string>
-				</dict>
+					<key>NSPhotoLibraryUsageDescription</key>
+	<string>QRGuard lets you choose an image to scan a QR code.</string>
+</dict>
 			</array>
 		</dict>
 	</dict>
