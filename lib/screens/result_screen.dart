@@ -96,8 +96,10 @@ class _ResultScreenState extends State<ResultScreen> {
                     const SizedBox(height: 16),
                     Text(
                       isUrl
-                          ? 'URL risk analysis'
-                          : 'QR code contains non-URL content',
+                          ? 'Website safety check'
+                          : content.type == QrContentType.payment
+                              ? 'Payment QR code'
+                              : 'QR code details',
                       style: Theme.of(context).textTheme.headlineMedium,
                       textAlign: TextAlign.center,
                     ),
@@ -152,7 +154,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     ],
                     const SizedBox(height: 24),
                     Text(
-                      isUrl ? 'Scanned URL' : 'Decoded content',
+                      isUrl ? 'Website link' : content.type == QrContentType.payment ? 'Payment information' : 'QR code information',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 10),
@@ -191,7 +193,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     ] else ... [
                       const SizedBox(height: 16),
                       Text(
-                        'Review the decoded data before choosing an action. QRGuard does not perform actions automatically.',
+                        'Check the information above. QRGuard will not open links or apps without your action.',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: QRGuardTheme.textSecondary,
                             ),
