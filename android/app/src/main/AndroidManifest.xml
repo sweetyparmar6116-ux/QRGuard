@@ -17,6 +17,11 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="http" />
         </intent>
+        <!-- Allow Android to discover apps that can handle UPI payment links. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="upi" />
+        </intent>
         <!-- Required to query activities that can process text (Flutter engine). -->
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
