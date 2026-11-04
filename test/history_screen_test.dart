@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:madl_project/models/scan_record.dart';
-import 'package:madl_project/screens/history_screen.dart';
-import 'package:madl_project/services/history_service.dart';
-import 'package:madl_project/services/url_analyzer.dart';
+import 'package:qrguard/models/scan_record.dart';
+import 'package:qrguard/screens/history_screen.dart';
+import 'package:qrguard/services/history_service.dart';
+import 'package:qrguard/services/url_analyzer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
