@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:madl_project/models/analysis_result.dart';
-import 'package:madl_project/services/url_analyzer.dart';
+import 'package:qrguard/models/analysis_result.dart';
+import 'package:qrguard/services/url_analyzer.dart';
 
 void main() {
   group('analyzeUrl', () {
