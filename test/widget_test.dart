@@ -68,7 +68,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Scan Result'), findsOneWidget);
-    expect(find.text('Website URL'), findsOneWidget);
+    expect(find.text('Website link'), findsOneWidget);
   });
 }
 
