@@ -119,6 +119,24 @@ class _ResultScreenState extends State<ResultScreen> {
                         ),
                       ),
                     ],
+                    if (content.type == QrContentType.payment) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(color: const Color(0xFF102D4D), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF2477D4))),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          const Text('PAYMENT QR · CHECK DETAILS', style: TextStyle(color: Color(0xFF8CC5FF), fontWeight: FontWeight.bold, letterSpacing: .5)),
+                          const SizedBox(height: 12),
+                          Text('Payee: ${content.payeeName ?? 'Not provided'}', style: const TextStyle(color: Colors.white)),
+                          const SizedBox(height: 6),
+                          Text('UPI ID: ${content.upiId ?? 'Not provided'}', style: const TextStyle(color: Colors.white)),
+                          const SizedBox(height: 6),
+                          Text('Amount: ${content.amount == null ? 'Not specified' : '${content.currency ?? 'INR'} ${content.amount}'}', style: const TextStyle(color: Colors.white)),
+                          const SizedBox(height: 10),
+                          const Text('Check the name and amount in your payment app before approving. QRGuard cannot verify who receives the money.', style: TextStyle(color: Color(0xFFB9D7F2))),
+                        ]),
+                      ),
+                    ],
                     if (isUrl) ... [
                       const SizedBox(height: 12),
                       Center(child: RiskBadge(riskLevel: analysis.riskLevel)),
@@ -336,6 +354,7 @@ class _ResultScreenState extends State<ResultScreen> {
   IconData _contentIcon(QrContentType type) {
     return switch (type) {
       QrContentType.url => Icons.link_rounded,
+      QrContentType.payment => Icons.account_balance_wallet_rounded,
       QrContentType.phone => Icons.phone_rounded,
       QrContentType.email => Icons.email_rounded,
       QrContentType.sms => Icons.sms_rounded,
@@ -372,6 +391,13 @@ class _ResultScreenState extends State<ResultScreen> {
     AnalysisResult analysis,
   ) {
     switch (content.type) {
+      case QrContentType.payment:
+        return FilledButton.icon(
+          style: FilledButton.styleFrom(backgroundColor: const Color(0xFF2477D4), foregroundColor: Colors.white),
+          onPressed: () => _confirmPayment(context, content),
+          icon: const Icon(Icons.payment_rounded),
+          label: const Text('Continue to payment app'),
+        );
       case QrContentType.url:
         return FilledButton.icon(
           onPressed: () => _openLink(context, analysis),
@@ -417,6 +443,34 @@ class _ResultScreenState extends State<ResultScreen> {
           label: const Text('Copy decoded content'),
         );
     }
+  }
+
+  Future<void> _confirmPayment(BuildContext context, QrContent content) async {
+    final uri = content.uri;
+    if (uri == null || uri.scheme.toLowerCase() != 'upi' ||
+        uri.host.toLowerCase() != 'pay' || content.upiId == null) {
+      _showMessage(context, 'This payment QR does not contain valid UPI details.');
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Review payment details'),
+        content: Text(
+          'You are leaving QRGuard to open your payment app.\n\n'
+          'Payee: ${content.payeeName ?? 'Not provided'}\n'
+          'UPI ID: ${content.upiId}\n'
+          'Amount: ${content.amount ?? 'Not specified'}\n\n'
+          'Verify the recipient and amount inside your payment app. Never enter your UPI PIN to receive money.',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Continue')),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    await _launchExternal(context, uri);
   }
 
   Future<void> _launchExternal(BuildContext context, Uri uri) async {
