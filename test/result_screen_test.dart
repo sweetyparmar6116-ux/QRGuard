@@ -75,7 +75,7 @@ void main() {
       },
     ));
 
-    expect(find.text('QR code contains non-URL content'), findsOneWidget);
+    expect(find.text('QR code details'), findsOneWidget);
     expect(find.text('Copy decoded content'), findsOneWidget);
     expect(
       tester.widget<FilledButton>(
@@ -117,4 +117,25 @@ void main() {
 
     expect(find.text('Could not open this website. Please try again.'), findsOneWidget);
   });
+
+  testWidgets('shows UPI payment details without opening the payment app', (tester) async {
+    var launchCount = 0;
+    await tester.pumpWidget(buildSubject(
+      'upi://pay?pa=shop%40okaxis&pn=Corner%20Store&am=125.50&cu=INR',
+      launch: (_) async {
+        launchCount++;
+        return true;
+      },
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Payment QR code'), findsOneWidget);
+    expect(find.text('PAYMENT QR · CHECK DETAILS'), findsOneWidget);
+    expect(find.text('Payee: Corner Store'), findsOneWidget);
+    expect(find.text('UPI ID: shop@okaxis'), findsOneWidget);
+    expect(find.text('Amount: INR 125.50'), findsOneWidget);
+    expect(find.text('Continue to payment app'), findsOneWidget);
+    expect(launchCount, 0);
+  });
+
 }
