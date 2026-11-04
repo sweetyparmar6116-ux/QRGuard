@@ -48,7 +48,7 @@ void main() {
 
     await tester.tap(find.text('https://newer.example/path'));
     await tester.pumpAndSettle();
-    expect(find.text('URL risk analysis'), findsOneWidget);
+    expect(find.text('Scan Result'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.text('HTTPS connection'),
       300,
