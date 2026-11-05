@@ -18,7 +18,7 @@ dependencies:
   # QR/barcode scanning via device camera.
   # Requires minSdk 21 (set explicitly in build.gradle.kts).
   # Camera permission is declared in AndroidManifest.xml.
-  mobile_scanner: ^6.0.0
+  mobile_scanner: ^7.5.0
   image_picker: ^1.1.2
 
   # On-device key-value storage for scan history.
