@@ -161,7 +161,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
           MobileScanner(
             controller: _controller,
             onDetect: _onDetect,
-            errorBuilder: (context, error, child) {
+            errorBuilder: (context, error) {
               final errorText = error.toString().toLowerCase();
               final permissionDenied = errorText.contains('permission') ||
                   errorText.contains('denied');
