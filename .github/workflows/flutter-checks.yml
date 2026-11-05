@@ -1,4 +1,4 @@
-name: Flutter checks
+name: Flutter checks and Android APK
 on:
   push:
     branches: [main, qrguard-usability-update]
@@ -15,3 +15,12 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+      - name: Build debug APK
+        run: flutter build apk --debug
+      - name: Upload QRGuard APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: QRGuard-debug-APK
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
